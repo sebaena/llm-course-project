@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Recommendations</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1b1e22;
+            color: #d5dbe6;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-lg p-6 bg-gray-800 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold mb-4 text-center">AI Recommendations</h1>
+        <div class="mb-4">
+            {% for recommendation in recommendations %}
+                <div class="mb-4">
+                    <h2 class="text-lg font-semibold">{{ recommendation['title'] }}</h2> <!-- Book title -->
+                    <p class="text-md">{{ recommendation['author'] }}</p> <!-- Author -->
+                    <p class="mt-2">{{ recommendation['synopsis'] }}</p> <!-- Synopsis -->
+                </div>
+            {% endfor %}
+        </div>
+        <a href="/" class="w-full p-2 bg-blue-500 hover:bg-blue-600 rounded text-center block">Back to Reading List</a>
+    </div>
+</body>
+</html>

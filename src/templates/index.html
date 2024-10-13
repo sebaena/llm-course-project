@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1b1e22;
+            color: #d5dbe6;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        function toggleAddBookForm() {
+            const form = document.getElementById('addBookForm');
+            form.classList.toggle('hidden');
+        }
+
+        function toggleEditForm(id) {
+            const form = document.getElementById('editForm' + id);
+            form.classList.toggle('hidden');
+        }
+
+        function toggleGenreField() {
+            const genreField = document.getElementById('genreField');
+            genreField.classList.toggle('hidden');
+        }
+    </script>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-4xl p-6 bg-gray-800 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold mb-4 text-center">Book Management</h1>
+
+        <button onclick="toggleAddBookForm()" class="mb-4 p-2 bg-[#7e9c8c] hover:bg-[#6c8b7e] rounded transition duration-300">Add Book</button>
+
+        <form id="addBookForm" action="/add_book/" method="post" class="mb-4 hidden">
+            <input type="text" name="title" placeholder="Title" required class="w-full p-2 mb-2 border border-gray-600 rounded">
+            <input type="text" name="author" placeholder="Author" required class="w-full p-2 mb-2 border border-gray-600 rounded">
+            <input type="text" name="genre" placeholder="Genre" required class="w-full p-2 mb-2 border border-gray-600 rounded">
+            <button type="submit" class="w-full p-2 bg-[#7e9c8c] hover:bg-[#6c8b7e] rounded transition duration-300">Submit</button>
+        </form>
+
+        <h2 class="text-xl font-semibold mb-2 text-center font-bold">Your Reading List</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-gray-800 rounded-lg">
+                <thead>
+                    <tr class="bg-[#7e9c8c] text-black">
+                        <th class="py-2 px-4 font-bold text-[#d5dbe6]">Book Title</th>
+                        <th class="py-2 px-4 font-bold text-[#d5dbe6]">Author</th>
+                        <th class="py-2 px-4 font-bold text-[#d5dbe6]">Genre</th>
+                        <th class="py-2 px-4 font-bold text-[#d5dbe6]">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                        <tr class="border-b border-gray-600">
+                            <td class="py-2 px-4">{{ book['title'] }}</td>
+                            <td class="py-2 px-4">{{ book['author'] }}</td>
+                            <td class="py-2 px-4">{{ book['genre'] }}</td>
+                            <td class="py-2 px-4 flex justify-end">
+                                <button onclick="toggleEditForm({{ book['id'] }})" class="bg-blue-500 hover:bg-blue-600 text-white rounded px-2">Edit</button>
+                                <form action="/delete_book/" method="post" class="ml-2">
+                                    <input type="hidden" name="id" value="{{ book['id'] }}">
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white rounded px-2">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr id="editForm{{ book['id'] }}" class="hidden">
+                            <td colspan="4">
+                                <form action="/edit_book/" method="post" class="flex">
+                                    <input type="hidden" name="id" value="{{ book['id'] }}">
+                                    <input type="text" name="title" placeholder="New Title" required class="border border-gray-600 rounded p-1 mr-2">
+                                    <input type="text" name="author" placeholder="New Author" required class="border border-gray-600 rounded p-1 mr-2">
+                                    <input type="text" name="genre" placeholder="New Genre" required class="border border-gray-600 rounded p-1 mr-2">
+                                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white rounded px-2">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex justify-between mt-4">
+            <form action="/recommend/" method="post" class="mr-2">
+                <button type="submit" class="w-full p-2 bg-[#4fc3a4] hover:bg-[#43b89c] rounded transition duration-300">Recommend Books</button>
+            </form>
+            <form action="/recommend_by_genre/" method="post" class="ml-2">
+                <button type="button" onclick="toggleGenreField()" class="w-full p-2 bg-[#4fc3a4] hover:bg-[#43b89c] rounded transition duration-300">Recommend Books by Genre</button>
+                <input type="text" id="genreField" name="genre" placeholder="Genre" required class="border border-gray-600 rounded p-1 hidden">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
