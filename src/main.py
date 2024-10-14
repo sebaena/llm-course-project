@@ -4,7 +4,8 @@ from fastapi import FastAPI, Request, Form, Depends, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import httpx
-import openai
+# import openai
+from openai import OpenAI
 from database import init_db, get_db_connection
 
 app = FastAPI()
@@ -14,7 +15,9 @@ templates = Jinja2Templates(directory="templates")
 init_db()
 
 # Set your OpenAI API key
-openai.api_key = os.environ["OPENAI_API_KEY"]
+# openai.api_key = os.environ["OPENAI_API_KEY"]
+client = OpenAI()
+
 @app.get("/", response_class=HTMLResponse)
 async def read_books(request: Request):
     with get_db_connection() as conn:
@@ -72,7 +75,7 @@ def generate_recommendations(books):
     book_descriptions = "\n".join([f"{book['title']} by {book['author']}" for book in books])
 
     # Call the OpenAI API to generate recommendations
-    response = openai.chat.completions.create(
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[
             {
