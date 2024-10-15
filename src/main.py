@@ -1,10 +1,7 @@
 # main.py
-import os
-from fastapi import FastAPI, Request, Form, Depends, HTTPException
+from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-import httpx
-# import openai
 from openai import OpenAI
 from database import init_db, get_db_connection
 
@@ -15,7 +12,6 @@ templates = Jinja2Templates(directory="templates")
 init_db()
 
 # Set your OpenAI API key
-# openai.api_key = os.environ["OPENAI_API_KEY"]
 client = OpenAI()
 
 @app.get("/", response_class=HTMLResponse)
@@ -28,13 +24,6 @@ async def read_books(request: Request):
 async def add_book(request: Request, title: str = Form(...), author: str = Form(...), genre: str = Form(...)):
     with get_db_connection() as conn:
         conn.execute('INSERT INTO books (title, author, genre) VALUES (?, ?, ?)', (title, author, genre))
-        conn.commit()
-    return await read_books(request)  # Await the read_books function
-
-@app.post("/edit_book/")
-async def edit_book(request: Request, id: int = Form(...), title: str = Form(...), author: str = Form(...), genre: str = Form(...)):
-    with get_db_connection() as conn:
-        conn.execute('UPDATE books SET title = ?, author = ?, genre = ? WHERE id = ?', (title, author, genre, id))
         conn.commit()
     return await read_books(request)  # Await the read_books function
 
@@ -59,28 +48,36 @@ async def recommend_by_genre(request: Request, genre: str = Form(...)):
     recommendations = generate_recommendations([dict(book) for book in books])
     return templates.TemplateResponse("recommendations.html", {"request": request, "recommendations": recommendations})
 
-
 def generate_recommendations(books):
     # Prepare a string of book titles and authors for the API request
     book_descriptions = "\n".join([f"{book['title']} by {book['author']}" for book in books])
 
     # Call the OpenAI API to generate recommendations
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4",
         messages=[
             {
                 "role": "system",
-                "content": "return data using a  Title by Author - Synopsis format in plain text, without enumeration or quotes"
+                "content": "return data using a Title by Author - Synopsis format in plain text, without quotes"
             },
             {
                 "role": "user",
-                "content": f"Based on these books:\n{book_descriptions}\nPlease recommend 10 similar books with their titles, authors, and one long paragraph synopsis without spoilers."
+                "content": f"Based on these books:\n{book_descriptions}\nPlease recommend similar books with their titles, authors, and one paragraph synopsis without spoilers."
             }
         ]
     )
 
-    # Parse the API response
-    recommendations_text = response.choices[0].message.content.strip()
+    # Check if the response has the expected structure
+    if response.choices and len(response.choices) > 0 and response.choices[0].message:
+        recommendations_text = response.choices[0].message.content
+
+        # Ensure recommendations_text is not None before calling strip
+        if recommendations_text:
+            recommendations_text = recommendations_text.strip()
+        else:
+            return []  # Return an empty list if no recommendations were found
+    else:
+        return []  # Return an empty list if the response is not as expected
 
     # Split the recommendations into lines
     recommendation_lines = recommendations_text.split('\n')
@@ -101,11 +98,8 @@ def generate_recommendations(books):
 
     return organized_recommendations
 
-
-
 # Use this function to generate dummy data in order not to overuse the openai API
 def test_generate_recommendations(books):
-    # Prepare a string of book titles and authors for the mock recommendations
     book_descriptions = "\n".join([f"{book['title']} by {book['author']}" for book in books])
 
     # Mock recommendations based on the provided books
