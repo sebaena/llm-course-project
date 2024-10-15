@@ -5,26 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Recommendations</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #1b1e22;
+            background-color: #16191c;
             color: #d5dbe6;
         }
+        h1 {
+            font-family: 'Tangerine', cursive;
+        }
+        .tangerine-font {
+            font-family: 'Tangerine', cursive;
+        }
+        /* h2 { */
+        /*     font-family: 'Tangerine', cursive; /* Apply the Tangerine font */ */
+        /* } */
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
-    <div class="w-full max-w-lg p-6 bg-gray-800 rounded-lg shadow-md">
-        <h1 class="text-2xl font-bold mb-4 text-center">AI Recommendations</h1>
-        <div class="mb-4">
+    <div class="w-full max-w-6xl p-6 bg-custom rounded-lg shadow-md mt-10">
+        <h1 class="text-8xl font-bold mb-4 text-center"> Personalized Recommendations </h1>
+        <div class="mb-40 mt-40">
             {% for recommendation in recommendations %}
-                <div class="mb-4">
-                    <h2 class="text-lg font-semibold">{{ recommendation['title'] }}</h2> <!-- Book title -->
-                    <p class="text-md">{{ recommendation['author'] }}</p> <!-- Author -->
-                    <p class="mt-2">{{ recommendation['synopsis'] }}</p> <!-- Synopsis -->
+                <div class="mb-4 mt-10">
+                    <h2>
+                        <span class="text-lg font-semibold text-5xl tangerine-font ">{{ recommendation['title'] }} </span>
+                        <span class="text-lg font-semibold text-2xl "> by {{recommendation['author'] }}</span>
+                    </h2>
+                    <p class="mb-4 mt-2">{{ recommendation['synopsis'] }}</p>
                 </div>
             {% endfor %}
         </div>
-        <a href="/" class="w-full p-2 bg-blue-500 hover:bg-blue-600 rounded text-center block">Back to Reading List</a>
+        <a href="/" class="w-full p-2 bg-[#1b1e22] hover:bg-gray-900 border border-green-600  rounded transition duration-300 text-1xl font-bold text-4xl text-green-500 tangerine-font">Back to Reading List</a>
     </div>
 </body>
 </html>

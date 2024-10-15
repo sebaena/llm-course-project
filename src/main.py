@@ -59,16 +59,6 @@ async def recommend_by_genre(request: Request, genre: str = Form(...)):
     recommendations = generate_recommendations([dict(book) for book in books])
     return templates.TemplateResponse("recommendations.html", {"request": request, "recommendations": recommendations})
 
-# def generate_recommendations(books):
-#     # Call the OpenAI API to generate recommendations
-#     response = openai.chat.completions.create(
-#         model="gpt-4",
-#         messages=[
-#             {"role": "user", "content": f"Based on these books: {books}, recommend similar books."}
-#         ]
-#     )
-#     return response.choices[0].message.content
-
 
 def generate_recommendations(books):
     # Prepare a string of book titles and authors for the API request
@@ -76,15 +66,15 @@ def generate_recommendations(books):
 
     # Call the OpenAI API to generate recommendations
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-4o-mini",
         messages=[
             {
                 "role": "system",
-                "content": "return data with a using a  Title by Author - Synopsis format"
+                "content": "return data using a  Title by Author - Synopsis format in plain text, without enumeration or quotes"
             },
             {
                 "role": "user",
-                "content": f"Based on these books:\n{book_descriptions}\nPlease recommend similar books with their titles, authors, and a brief synopsis."
+                "content": f"Based on these books:\n{book_descriptions}\nPlease recommend 10 similar books with their titles, authors, and one long paragraph synopsis without spoilers."
             }
         ]
     )
@@ -110,3 +100,42 @@ def generate_recommendations(books):
                 })
 
     return organized_recommendations
+
+
+
+# Use this function to generate dummy data in order not to overuse the openai API
+def test_generate_recommendations(books):
+    # Prepare a string of book titles and authors for the mock recommendations
+    book_descriptions = "\n".join([f"{book['title']} by {book['author']}" for book in books])
+
+    # Mock recommendations based on the provided books
+    local_recommendations = [
+        {
+            'title': 'The Great Gatsby',
+            'author': 'F. Scott Fitzgerald',
+            'synopsis': 'A novel set in the Roaring Twenties, it tells the story of Jay Gatsby\'s unrequited love for Daisy Buchanan.'
+        },
+        {
+            'title': 'To Kill a Mockingbird',
+            'author': 'Harper Lee',
+            'synopsis': 'A coming-of-age story that deals with serious issues like racial injustice and moral growth.'
+        },
+        {
+            'title': '1984',
+            'author': 'George Orwell',
+            'synopsis': 'A dystopian novel set in a totalitarian society under constant surveillance.'
+        },
+        {
+            'title': 'Pride and Prejudice',
+            'author': 'Jane Austen',
+            'synopsis': 'A romantic novel that critiques the British landed gentry at the end of the 18th century.'
+        },
+        {
+            'title': 'The Catcher in the Rye',
+            'author': 'J.D. Salinger',
+            'synopsis': 'A story about teenage alienation and loss, narrated by the cynical Holden Caulfield.'
+        }
+    ]
+
+    # Return the local recommendations
+    return local_recommendations
