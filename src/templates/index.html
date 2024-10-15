@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Analyzer</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@700&display=swap" rel="stylesheet"> <!-- Google Fonts Link -->
     <style>
         body {
             background-color: #16191c;
@@ -15,6 +16,12 @@
         }
         .bg-custom {
             background-color: #1b1e22;
+        }
+        h1 {
+            font-family: 'Tangerine', cursive; /* Apply the Tangerine font */
+        }
+        .tangerine-font {
+            font-family: 'Tangerine', cursive; /* Apply the Tangerine font to buttons */
         }
     </style>
     <script>
@@ -28,18 +35,19 @@
             form.classList.toggle('hidden');
         }
 
-        function toggleGenreField() {
-            const genreField = document.getElementById('genreField');
-            genreField.classList.toggle('hidden');
+        function showLoadingMessage() {
+            const messageDiv = document.getElementById('loadingMessage');
+            messageDiv.classList.remove('hidden');
         }
     </script>
 </head>
 <body class="flex items-center justify-center min-h-screen">
     <div class="w-full h-screen max-w-6xl p-6 bg-custom rounded-lg shadow-md ">
-        <h1 class="text-2xl font-bold mb-10 text-center mt-20 ">My Read Books</h1>
+        <h1 class="text-2xl font-bold mb-10 text-center text-8xl mt-20 ">My Collection of Read Books</h1>
+        <h2 class = "text-1xl m-40 mb-10 text-center mt-20 "> Write books that you have recently read and enjoyed. Click on the generate button to get a list of AI suggested books. Use the demo list or input your own </h2>
 
         <div class="overflow-x-auto mb-6">
-            <table class="min-w-full bg-custom rounded-lg text-left mt-20">
+            <table class="min-w-full bg-custom rounded-lg text-left mt-10">
                 <thead>
                     <tr class="bg-[#7e9c8c]">
                         <th class="py-2 px-4 font-bold text-[#d5dbe6]">Book Title</th>
@@ -69,21 +77,23 @@
             <button onclick="toggleAddBookForm()" class="text-green-400 p-1 hover:bg-green-900 rounded transition duration-300 font-bold text-2xl">+</button>
         </div>
 
-        <form id="addBookForm" action="/add_book/" method="post" class="space-x-30 hidden mb-6">
-            <input type="text" name="title" placeholder="Title" required class="border border-gray-600 rounded p-1 mr-2 text-black">
-            <input type="text" name="author" placeholder="Author" required class="border border-gray-600 rounded p-1 mr-2 text-black">
-            <input type="text" name="genre" placeholder="Genre" required class="border border-gray-600 rounded p-1 mr-2 text-black">
-            <button type="submit" class="p-1 bg-green-600 hover:bg-green-900 rounded transition duration-300">Add</button>
-        </form>
+        <div class="flex justify-center items-center mb-6"> <!-- Center the form -->
+            <form id="addBookForm" action="/add_book/" method="post" class="space-x-30 hidden flex flex-col items-center"> <!-- Make it a flex container -->
+                <input type="text" name="title" placeholder="Title" required class="border border-gray-600 rounded p-1 mr-2 text-black mb-2">
+                <input type="text" name="author" placeholder="Author" required class="border border-gray-600 rounded p-1 mr-2 text-black mb-2">
+                <input type="text" name="genre" placeholder="Genre" required class="border border-gray-600 rounded p-1 mr-2 text-black mb-2">
+                <button type="submit" class="p-1 bg-[#1b1e22] hover:bg-green-900 rounded transition duration-300">Add</button>
+            </form>
+        </div>
 
-        <div class="flex justify-between mt-20 mb-6">
-            <form action="/recommend/" method="post" class="mr-2">
-                <button type="submit" class="w-full p-2 bg-green-600 hover:bg-green-900 rounded transition duration-300">Recommend Books</button>
+        <div class="flex justify-center text-center mt-40 mb-10">
+            <form action="/recommend/" method="post" class="mr-2" onsubmit="showLoadingMessage()">
+                <button type="submit" class="w-full p-2 bg-[#1b1e22] hover:bg-gray-900 border border-green-600  rounded transition duration-300 text-1xl font-bold text-4xl text-green-500 tangerine-font"> Generate Reading Recommendations </button>
             </form>
-            <form action="/recommend_by_genre/" method="post" class="ml-2">
-                <button type="button" onclick="toggleGenreField()" class="w-full p-2 bg-[#4fc3a4] hover:bg-[#43b89c] rounded transition duration-300">Recommend Books by Genre</button>
-                <input type="text" id="genreField" name="genre" placeholder="Genre" required class="border border-gray-600 rounded p-1 hidden">
-            </form>
+        </div>
+
+        <div id="loadingMessage" class="hidden text-center text-4xl tangerine-font mt-4">
+            Your Personalized book recommendations are being generated. Please wait for a few seconds ...
         </div>
     </div>
 </body>
