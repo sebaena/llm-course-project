@@ -7,14 +7,14 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #16191c; /* Changed to gray */
+            background-color: #16191c;
             color: #d5dbe6;
         }
         .hidden {
             display: none;
         }
         .bg-custom {
-            background-color: #1b1e22; /* Custom gray color */
+            background-color: #1b1e22;
         }
     </style>
     <script>
@@ -36,64 +36,47 @@
 </head>
 <body class="flex items-center justify-center min-h-screen">
     <div class="w-full h-screen max-w-6xl p-6 bg-custom rounded-lg shadow-md ">
-        <h1 class="text-2xl font-bold mb-4 text-center ">My Read Books</h1>
+        <h1 class="text-2xl font-bold mb-10 text-center mt-20 ">My Read Books</h1>
 
-
-        <div class="overflow-x-auto ">
-            <table class="min-w-full  bg-custom rounded-lg text-left">
-            <!-- <table class="table-fixed"> -->
+        <div class="overflow-x-auto mb-6">
+            <table class="min-w-full bg-custom rounded-lg text-left mt-20">
                 <thead>
                     <tr class="bg-[#7e9c8c]">
                         <th class="py-2 px-4 font-bold text-[#d5dbe6]">Book Title</th>
                         <th class="py-2 px-4 font-bold text-[#d5dbe6]">Author</th>
                         <th class="py-2 px-4 font-bold text-[#d5dbe6]">Genre</th>
-                        <!-- <th class="py-2 px-4">Algo</th> <!-- Empty header for action buttons -->
                     </tr>
                 </thead>
                 <tbody>
                     {% for book in books %}
-                        <tr class="border-b border-gray-600 ">
+                        <tr class="border-b border-gray-600">
                             <td class="py-2 px-2">{{ book['title'] }}</td>
                             <td class="py-2 px-2">{{ book['author'] }}</td>
                             <td class="py-2 px-2">{{ book['genre'] }}</td>
                             <td class="py-2 px-2 ">
-                                <!-- <button onclick="toggleEditForm({{ book['id'] }})" class="bg-blue-500 hover:bg-blue-600 text-white rounded px-2">Edit</button> -->
                                 <form action="/delete_book/" method="post" class="ml-2 inline">
                                     <input type="hidden" name="id" value="{{ book['id'] }}">
-                                    <button type="submit" class=" hover:bg-red-900 font-bold text-red-400 rounded transition duration-300 px-2">x</button>
+                                    <button type="submit" class="hover:bg-red-900 font-bold text-red-400 rounded transition duration-300 px-2">x</button>
                                 </form>
                             </td>
                         </tr>
-                        <!-- <tr id="editForm{{ book['id'] }}" class="hidden"> -->
-                        <!--     <td colspan="4"> -->
-                        <!--         <form action="/edit_book/" method="post" class="flex"> -->
-                        <!--             <input type="hidden" name="id" value="{{ book['id'] }}"> -->
-                        <!--             <input type="text" name="title" placeholder="New Title" required class="border border-gray-600 rounded p-1 mr-2"> -->
-                        <!--             <input type="text" name="author" placeholder="New Author" required class="border border-gray-600 rounded p-1 mr-2"> -->
-                        <!--             <input type="text" name="genre" placeholder="New Genre" required class="border border-gray-600 rounded p-1 mr-2"> -->
-                        <!--             <button type="submit" class="bg-green-500 hover:bg-green-600 text-white rounded px-2">Update</button> -->
-                        <!--         </form> -->
-                        <!--     </td> -->
-                        <!-- </tr> -->
                     {% endfor %}
                 </tbody>
             </table>
         </div>
 
-        <!-- <div class="flex justify-end mb-4"> -->
-        <div class="flex justify-center mb-4">
+        <div class="flex justify-center mb-6">
             <button onclick="toggleAddBookForm()" class="text-green-400 p-1 hover:bg-green-900 rounded transition duration-300 font-bold text-2xl">+</button>
         </div>
 
-        <td colspan="4">
-            <form id="addBookForm" action="/add_book/" method="post" class=" space-x-30 hidden ">
-                <input type="text" name="title" placeholder="Title" required class="border border-gray-600 rounded p-1 mr-2 text-black">
-                <input type="text" name="author" placeholder="Author" required class="border border-gray-600 rounded p-1 mr-2 text-black">
-                <input type="text" name="genre" placeholder="Genre" required class="border border-gray-600 rounded p-1 mr-2 text-black">
-                <button type="submit" class="p-1 bg-green-600 hover:bg-green-900 rounded transition duration-300">Add</button>
-            </form>
-        </td>
-        <div class="flex justify-between mt-4">
+        <form id="addBookForm" action="/add_book/" method="post" class="space-x-30 hidden mb-6">
+            <input type="text" name="title" placeholder="Title" required class="border border-gray-600 rounded p-1 mr-2 text-black">
+            <input type="text" name="author" placeholder="Author" required class="border border-gray-600 rounded p-1 mr-2 text-black">
+            <input type="text" name="genre" placeholder="Genre" required class="border border-gray-600 rounded p-1 mr-2 text-black">
+            <button type="submit" class="p-1 bg-green-600 hover:bg-green-900 rounded transition duration-300">Add</button>
+        </form>
+
+        <div class="flex justify-between mt-20 mb-6">
             <form action="/recommend/" method="post" class="mr-2">
                 <button type="submit" class="w-full p-2 bg-green-600 hover:bg-green-900 rounded transition duration-300">Recommend Books</button>
             </form>
