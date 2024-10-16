@@ -44,7 +44,10 @@
 <body class="flex items-center justify-center min-h-screen">
     <div class="w-full h-screen max-w-6xl p-6 bg-custom rounded-lg shadow-md mb-30">
         <h1 class="text-2xl font-bold mb-10 text-center text-8xl mt-20 "> Reading Archive</h1>
-        <h2 class ="text-1xl m-40 mb-10 text-center mt-20 "> Write books that you have recently read and enjoyed. Click on the generate button to get a list of AI suggested books. Use the demo list or input your own </h2>
+        <h2 class ="text-1xl m-40 mb-10 text-center mt-20 ">
+            Write books that you have enjoyed reading. Get some basic reading statistics or generate a tailored list of
+            book suggestions by AI. Feel free to use the Demo list, or you can remove the entries and enter your own.
+        </h2>
 
         <div class="overflow-x-auto mb-6">
             <table class="min-w-full bg-custom rounded-lg text-left mt-10">
@@ -86,15 +89,21 @@
             </form>
         </div>
 
-        <div class="flex justify-center text-center mt-40 mb-10">
+        <div id="loadingMessage" class="hidden text-center text-4xl tangerine-font mt-10 ">
+            Your Personalized book recommendations are being generated. Please wait for a few seconds ...
+        </div>
+        <div class="flex justify-center text-center mt-10 mb-10">
             <form action="/recommend/" method="post" class="mr-2" onsubmit="showLoadingMessage()">
-                <button type="submit" class="w-full p-2 bg-[#1b1e22] hover:bg-gray-900 border border-green-600  rounded transition duration-300 text-1xl font-bold text-4xl text-green-500 tangerine-font"> Generate Reading Recommendations </button>
+                <button type="submit" class="w-full p-2 bg-[#1b1e22] hover:bg-gray-900 border border-green-600 rounded transition duration-300 text-1xl font-bold text-4xl text-green-500 tangerine-font"> Generate Reading Recommendations </button>
+            </form>
+
+            <form action="/reading_stats/" method="get" class="ml-2">
+                <button type="submit" class="w-full p-2 bg-[#1b1e22] hover:bg-gray-900 border border-green-600 rounded transition duration-300 text-1xl font-bold text-4xl text-green-500 tangerine-font"> Reading Stats </button>
             </form>
         </div>
 
-        <div id="loadingMessage" class="hidden text-center text-4xl tangerine-font mt-10 mb-10">
-            Your Personalized book recommendations are being generated. Please wait for a few seconds ...
-        </div>
+
+
     </div>
 </body>
 </html>

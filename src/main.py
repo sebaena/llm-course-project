@@ -48,6 +48,16 @@ async def recommend_by_genre(request: Request, genre: str = Form(...)):
     recommendations = generate_recommendations([dict(book) for book in books])
     return templates.TemplateResponse("recommendations.html", {"request": request, "recommendations": recommendations})
 
+@app.get("/reading_stats/", response_class=HTMLResponse)
+async def reading_stats(request: Request):
+    with get_db_connection() as conn:
+        genres = conn.execute('SELECT genre, COUNT(*) as count FROM books GROUP BY genre').fetchall()
+
+    # Convert the result to a list of dictionaries
+    genres_list = [{'genre': genre[0], 'count': genre[1]} for genre in genres]
+
+    return templates.TemplateResponse("reading_stats.html", {"request": request, "genres": genres_list})
+
 def generate_recommendations(books):
     # Prepare a string of book titles and authors for the API request
     book_descriptions = "\n".join([f"{book['title']} by {book['author']}" for book in books])
@@ -101,6 +111,7 @@ def generate_recommendations(books):
 # Use this function to generate dummy data in order not to overuse the openai API
 def test_generate_recommendations(books):
     book_descriptions = "\n".join([f"{book['title']} by {book['author']}" for book in books])
+    print (book_descriptions)
 
     # Mock recommendations based on the provided books
     local_recommendations = [
